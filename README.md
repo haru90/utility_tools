@@ -22,7 +22,7 @@ Utility Tools
 準備中．
 
 
-## Licence
+## License
 準備中．
 
 
