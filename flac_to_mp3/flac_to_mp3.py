@@ -27,7 +27,7 @@ def encode(in_dir_path, out_root_dir_path):
 
 def main(argv):
     if len(argv) != 3:
-        print('Usage: python flac_to_mp3.py [input directory path] [output directory path]')
+        print('Usage: flac_to_mp3.py [input directory path] [output directory path]')
         sys.exit(1)
 
     in_dir_path = argv[1]
