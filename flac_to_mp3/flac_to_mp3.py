@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
+import click
 import glob
 import os
 import subprocess
-import sys
+
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 
 def encode(in_dir_path, out_root_dir_path):
@@ -21,24 +23,21 @@ def encode(in_dir_path, out_root_dir_path):
         try:
             print('\nEncoding ' + in_path + '\n')
             subprocess.run(ffmpeg_argv)
-        except:
-            print("Error: Fail to encode " + in_path)
+        except Exception as e:
+            print(e)
 
 
-def main(argv):
-    if len(argv) != 3:
-        print('Usage: flac_to_mp3.py [input directory path] [output directory path]')
-        sys.exit(1)
-
-    in_dir_path = argv[1]
-    out_root_dir_path = argv[2]
-
-    out_dir_path = os.path.join(out_root_dir_path, os.path.basename(in_dir_path))
+@click.command(context_settings=CONTEXT_SETTINGS)
+@click.argument('input_directory_path')
+@click.argument('output_directory_path', default=os.getcwd())
+def main(input_directory_path, output_directory_path):
+    '''Encode FLAC audio files into MP3 320kbps CBR files'''
+    out_dir_path = os.path.join(output_directory_path, os.path.basename(input_directory_path))
     if not os.path.exists(out_dir_path):
         os.mkdir(out_dir_path)
 
-    encode(in_dir_path, out_dir_path)
+    encode(input_directory_path, out_dir_path)
 
 
 if __name__ == '__main__':
-    main(sys.argv)
+    main()
