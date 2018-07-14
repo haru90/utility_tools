@@ -8,15 +8,19 @@ import subprocess
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 
+def escape(str):
+    return str.translate(str.maketrans({'[': '[[]', ']': '[]]'}))
+
+
 def encode(in_dir_path, out_root_dir_path):
-    for f in glob.glob(os.path.join(in_dir_path, '*')):
+    for f in glob.glob(os.path.join(escape(in_dir_path), '*')):
         if os.path.isdir(f):
             out_dir_path = os.path.join(out_root_dir_path, os.path.basename(f))
             if not os.path.exists(out_dir_path):
                 os.mkdir(out_dir_path)
             encode(f, out_dir_path)
 
-    for in_path in glob.glob(os.path.join(in_dir_path, '*.flac')):
+    for in_path in glob.glob(os.path.join(escape(in_dir_path), '*.flac')):
         in_basename = os.path.splitext(os.path.basename(in_path))[0]
         out_path = os.path.join(out_root_dir_path, in_basename + '.mp3')
         ffmpeg_argv = ['ffmpeg', '-i', in_path, '-ab', '320k', '-c:v', 'copy', '-n', out_path]
