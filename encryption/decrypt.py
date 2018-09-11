@@ -10,8 +10,6 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 PASSWORD_F_PATH = '{}/.PASSWORD'.format(os.environ['HOME'])
 
 
-@click.command(context_settings=CONTEXT_SETTINGS)
-@click.argument('input_path')
 def decrypt(input_path):
     out_path = os.path.splitext(input_path)[0]
     try:
@@ -29,5 +27,11 @@ def decrypt(input_path):
         sys.exit(e)
 
 
+@click.command(context_settings=CONTEXT_SETTINGS)
+@click.argument('input_path')
+def main(input_path):
+    decrypt(input_path)
+
+
 if __name__ == '__main__':
-    decrypt()
+    main()

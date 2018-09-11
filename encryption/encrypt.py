@@ -9,8 +9,6 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 PASSWORD_F_PATH = '{}/.PASSWORD'.format(os.environ['HOME'])
 
 
-@click.command(context_settings=CONTEXT_SETTINGS)
-@click.argument('input_path')
 def encrypt(input_path):
     try:
         if os.path.isfile(input_path):
@@ -19,7 +17,7 @@ def encrypt(input_path):
                  'file:{}'.format(PASSWORD_F_PATH)])
             if result.returncode != 0:
                 sys.exit('Error: Failed to encrypt {}'.format(input_path))
-            subprocess.run(['rm', input_path])
+            # subprocess.run(['rm', input_path])
         elif os.path.isdir(input_path):
             tgz_path = '{}.tar.gz'.format(input_path)
             subprocess.run(['tar', 'czf', tgz_path, input_path])
@@ -34,7 +32,7 @@ def encrypt(input_path):
                     sys.exit(1)
                 else:
                     sys.exit('Error: Failed to extract {}'.format(tgz_path))
-            subprocess.run(['rm', '-rf', input_path])
+            # subprocess.run(['rm', '-rf', input_path])
             subprocess.run(['rm', tgz_path])
         else:
             sys.exit('Error: {} is not a file or directory'.format(input_path))
@@ -42,5 +40,11 @@ def encrypt(input_path):
         sys.exit(e)
 
 
+@click.command(context_settings=CONTEXT_SETTINGS)
+@click.argument('input_path')
+def main(input_path):
+    encrypt(input_path)
+
+
 if __name__ == '__main__':
-    encrypt()
+    main()
