@@ -11,18 +11,18 @@ PASSWORD_F_PATH = '{}/.PASSWORD'.format(os.environ['HOME'])
 
 
 def decrypt(input_path):
-    out_path = os.path.splitext(input_path)[0]
+    decrypted_path = os.path.splitext(input_path)[0]
     try:
-        result = subprocess.run(['openssl', 'aes-256-cbc', '-d', '-in', input_path, '-out', out_path, '-pass',
+        result = subprocess.run(['openssl', 'aes-256-cbc', '-d', '-in', input_path, '-out', decrypted_path, '-pass',
                                  'file:{}'.format(PASSWORD_F_PATH)])
         if result.returncode != 0:
             sys.exit('Error: Failed to decrypt {}'.format(input_path))
         subprocess.run(['rm', input_path])
-        if re.match(r'^.+\.tar\.gz$', out_path):
-            result = subprocess.run(['tar', 'xzf', out_path])
+        if re.match(r'^.+\.tar\.gz$', decrypted_path):
+            result = subprocess.run(['tar', 'xzf', decrypted_path, '-C', os.path.split(decrypted_path)[0]])
             if result.returncode != 0:
-                sys.exit('Error: Failed to extract {}'.format(out_path))
-            subprocess.run(['rm', out_path])
+                sys.exit('Error: Failed to extract {}'.format(decrypted_path))
+            subprocess.run(['rm', decrypted_path])
     except Exception as e:
         sys.exit(e)
 

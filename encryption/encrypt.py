@@ -20,7 +20,7 @@ def encrypt(input_path):
             # subprocess.run(['rm', input_path])
         elif os.path.isdir(input_path):
             tgz_path = '{}.tar.gz'.format(input_path)
-            subprocess.run(['tar', 'czf', tgz_path, input_path])
+            subprocess.run(['tar', 'czf', tgz_path, '-C', os.path.split(input_path)[0], os.path.basename(input_path)])
             result = subprocess.run(
                 ['openssl', 'aes-256-cbc', '-e', '-in', tgz_path, '-out', '{}.enc'.format(tgz_path), '-pass',
                  'file:{}'.format(PASSWORD_F_PATH)])
