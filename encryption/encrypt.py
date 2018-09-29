@@ -20,13 +20,19 @@ def encrypt(input_path):
             # subprocess.run(['rm', input_path])
         elif os.path.isdir(input_path):
             tgz_path = '{}.tar.gz'.format(input_path)
-            subprocess.run(['tar', 'czf', tgz_path, '-C', os.path.split(input_path)[0], os.path.basename(input_path)])
+            input_root_dir_path = os.path.split(input_path)[0]
+            if input_root_dir_path == '':
+                input_root_dir_path = '.'
+            subprocess.run(['tar', 'czf', tgz_path, '-C', input_root_dir_path, os.path.basename(input_path)])
             result = subprocess.run(
                 ['openssl', 'aes-256-cbc', '-e', '-in', tgz_path, '-out', '{}.enc'.format(tgz_path), '-pass',
                  'file:{}'.format(PASSWORD_F_PATH)])
             if result.returncode != 0:
                 print('Error: Failed to encrypt {}'.format(input_path), file=sys.stderr)
-                result = subprocess.run(['tar', 'xzf', tgz_path])
+                tgz_root_dir_path = os.path.split(tgz_path)
+                if tgz_root_dir_path == '':
+                    tgz_root_dir_path = '.'
+                result = subprocess.run(['tar', 'xzf', tgz_path, '-C', tgz_root_dir_path])
                 if result.returncode == 0:
                     subprocess.run(['rm', tgz_path])
                     sys.exit(1)

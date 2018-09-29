@@ -19,7 +19,10 @@ def decrypt(input_path):
             sys.exit('Error: Failed to decrypt {}'.format(input_path))
         subprocess.run(['rm', input_path])
         if re.match(r'^.+\.tar\.gz$', decrypted_path):
-            result = subprocess.run(['tar', 'xzf', decrypted_path, '-C', os.path.split(decrypted_path)[0]])
+            decrypted_root_dir_path = os.path.split(decrypted_path)[0]
+            if decrypted_root_dir_path == '':
+                decrypted_root_dir_path = '.'
+            result = subprocess.run(['tar', 'xzf', decrypted_path, '-C', decrypted_root_dir_path])
             if result.returncode != 0:
                 sys.exit('Error: Failed to extract {}'.format(decrypted_path))
             subprocess.run(['rm', decrypted_path])
