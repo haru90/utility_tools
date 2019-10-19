@@ -8,8 +8,8 @@ import subprocess
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 
-def escape(str):
-    return str.translate(str.maketrans({'[': '[[]', ']': '[]]'}))
+def escape(string):
+    return string.translate(string.maketrans({'[': '[[]', ']': '[]]'}))
 
 
 def encode(in_dir_path, out_root_dir_path):
@@ -35,7 +35,8 @@ def encode(in_dir_path, out_root_dir_path):
 @click.argument('input_directory_path')
 @click.argument('output_directory_path', default=os.getcwd())
 def main(input_directory_path, output_directory_path):
-    '''Encode FLAC audio files into MP3 320kbps CBR files'''
+    """Encode FLAC audio files into MP3 320kbps CBR files"""
+
     out_dir_path = os.path.join(output_directory_path, os.path.basename(input_directory_path))
     if not os.path.exists(out_dir_path):
         os.mkdir(out_dir_path)
